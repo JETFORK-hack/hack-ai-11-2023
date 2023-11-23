@@ -9,8 +9,9 @@ services:
       - cluster.name=jetfork-es
       - bootstrap.memory_lock=true
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+
+      - xpack.security.enabled=false
+      # - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     ulimits:
       memlock:
         soft: -1
@@ -19,5 +20,4 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - ./data:/var/data/elasticsearch
-      - ./logs:/var/log/elasticsearch
+      - ./esdata:/usr/share/elasticsearch/data
