@@ -22,7 +22,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - ./esdata:/usr/share/elasticsearch/data
+      - ./esdata:/usr/share/elasticsearch/data:cached
 
   kibana:
     container_name: kibana
