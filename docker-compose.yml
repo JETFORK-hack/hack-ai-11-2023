@@ -16,6 +16,8 @@ services:
       memlock:
         soft: -1
         hard: -1
+    env_file:
+      - .env
     ports:
       - "9200:9200"
       - "9300:9300"
