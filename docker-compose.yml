@@ -3,7 +3,7 @@ version: "3.9"
 services:
   elasticsearch:
     # image: docker.elastic.co/elasticsearch/elasticsearch:6.6.2
-    image: elasticsearch:8.11.1
+    image: elastic/elasticsearch:8.11.1
     container_name: elasticsearch
     environment:
       - cluster.name=jetfork-es
@@ -12,24 +12,31 @@ services:
 
       - xpack.security.enabled=false
       # - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
     env_file:
       - .env
     ports:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - ./esdata:/usr/share/elasticsearch/data:cached
+      - elasticsearch_data:/usr/share/elasticsearch/data
+     # - ./esdata:/usr/share/elasticsearch/data:cached
+     # - ./logs:/usr/share/elasticsearch/logs
 
   kibana:
     container_name: kibana
-    image: kibana:8.11.1
+    image: elastic/kibana:8.11.1
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - 5601:5601
     depends_on:
       - elasticsearch
+
+volumes:
+  elasticsearch_data:
+    #external: true
+    #name: elasticsearch-data
