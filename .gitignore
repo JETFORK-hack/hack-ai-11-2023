@@ -256,3 +256,5 @@ dmypy.json
 data
 logs
 elasticsearch_data
+
+*.DS_Store
