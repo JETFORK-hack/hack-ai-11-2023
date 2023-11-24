@@ -2,11 +2,14 @@ from typing import Any, List
 
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
-from starlette.responses import Response
 
 from app.deps.elastic import query_es
+from utils.nearest_queries import path
+
+# from utils.spelling_checker.sym_spell_servicer import SymSpellRouterServicer
 
 
+# spell_checker = SymSpellRouterServicer()
 router = APIRouter(prefix="/items")
 
 
@@ -16,8 +19,16 @@ class InfoSchema(BaseModel):
     data: List[Any]
     count: int
 
+
 @router.get("/info", response_model=InfoSchema)
 async def info(search_str: str = Query(..., alias="q")):
+    # b = spell_checker.predict_single_correction(
+    #     search_str,
+    #     use_preprocessing=True,
+    #     use_keyboard_inverter=False,
+    #     use_correction=True,
+    # )
+
     a = query_es(search_str, 1, 5)
     count, data = await a
     return {"status": "ok", "query": search_str, "data": data, "count": count}
