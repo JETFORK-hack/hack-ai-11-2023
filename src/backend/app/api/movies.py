@@ -3,21 +3,31 @@ from typing import Any, List
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
-from app.deps.elastic import query_es
+from app.deps.elastic import query_es, query_es_get_best
 
 # from app.lifespan import spell_checker, nearest_queries
 from app.lifespan import global_objs
+from utils.top import get_default_top
 
 
 router = APIRouter(prefix="/items")
 
 
+class VideoDetailOut(BaseModel):
+    id: str
+    source_video_title: str
+    source_channel_title: str
+    v_category: str
+    v_channel_type: str
+
+
 class InfoSchema(BaseModel):
     status: str
     query: str
-    data: List[Any]
+    data: List[VideoDetailOut] = []
     count: int
     on_processed_search: Any
+    backfill: List[VideoDetailOut] = []
 
 
 @router.get("/info", response_model=InfoSchema)
@@ -37,15 +47,17 @@ async def info(search_str: str = Query(..., alias="q")):
             ]
         )
     )
-
-    a = query_es(search_str, 1, 5)
-    count, data = await a
+    # ориентироваться на search_str, осталосье искать с меньшим приоритетом. Посмотреть, как сделть or для всех этих условий
+    # condidats = query_es(search_str, 1, 150)
+    condidats = query_es_get_best(search_str, page=1, page_size=150)
+    count, data = await condidats
     return {
         "status": "ok",
         "query": search_str,
         "data": data,
         "count": count,
         "on_processed_search": on_processed_search,
+        "backfill": [] if len(data) else get_default_top(),
     }
 
 

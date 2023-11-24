@@ -24,7 +24,7 @@ global_objs = GlobalContext()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logging.info("Loading ElasticSearch connect")
+    logging.info(f"Loading ElasticSearch connect ({settings.ELASTICSEARCH_INDEX=})")
     global global_objs
     global_objs.es = AsyncElasticsearch(settings.ELASTICSEARCH_URL)
     # Models

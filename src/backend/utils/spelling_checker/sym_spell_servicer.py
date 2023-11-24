@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 import traceback
 
+from utils.spelling_checker.keyboard_layer_translation import KeyboardCorrector
+
 from .preprocess import Preprocessor
 
 # from .keyboard_layer_translation import KeyboardCorrector
