@@ -35,7 +35,7 @@ services:
     image: elastic/kibana:8.11.1
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - SERVER_NAME=https://jetfork.ru/kibana/
+      - SERVER_BASEPATH=/kibana
     ports:
       - 5601:5601
     depends_on:

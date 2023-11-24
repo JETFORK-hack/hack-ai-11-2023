@@ -9,7 +9,7 @@ path = Path(path, "resources")
 
 class NearestQueries:
     def __init__(self):
-        with open(Path(path, "ind2queries_ft.json"), "r") as f:
+        with open(Path(path, "ind2queries_ft.json"), "r", encoding='utf-8') as f:
             self.ind2query_ft = json.load(f)
         self.model = fasttext.load_model(str(Path(path, "00_fasttext_queries.bin")))
         self.index = faiss.read_index(str(Path(path, "faiss_ft_index.index")))
