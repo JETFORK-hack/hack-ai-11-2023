@@ -9,38 +9,6 @@ async def query_es(query: str, page: int, page_size: int):
     body = {
         "from": page_size / page,
         "size": page_size,
-        # "query": {
-        #     "bool": {
-        #     "should": [
-        #         {
-        #         "match": {
-        #             "processed_video_title": {
-        #             "query": query,
-        #             "boost": 2,
-        #             "fuzziness": "AUTO",
-        #             "prefix_length": 0,
-        #             "max_expansions": 50,
-        #             "operator": "and",  # Уточнение, чтобы все слова из запроса были в результирующих документах
-        #             "minimum_should_match": "75%"  # Устанавливаем минимальное количество совпадающих терминов
-        #             }
-        #         }
-        #         },
-        #         {
-        #         "match": {
-        #             "processed_channel_title": {
-        #             "query": query,
-        #             "boost": 1,
-        #             "fuzziness": "AUTO",
-        #             "prefix_length": 0,
-        #             "max_expansions": 50,
-        #             "operator": "and",
-        #             "minimum_should_match": "75%"
-        #             }
-        #         }
-        #         }
-        #     ]
-        #     }
-        # }
         "query": {
             "bool": {
                 "should": [
@@ -84,9 +52,9 @@ async def query_es(query: str, page: int, page_size: int):
                 ]
             }
         },
+        "_source": ["id", "source_video_title", "source_channel_title", "v_category", "v_channel_type", "processed_video_title", "processed_channel_title"],
     }
     response = await global_objs.es.search(index=index, body=body)
-    # response = await global_objs['es'].search(index=index, body=body)
     total = response["hits"]["total"]["value"]
 
     return total, [hit["_source"] for hit in response["hits"]["hits"]]

@@ -17,26 +17,17 @@ class InfoSchema(BaseModel):
     query: str
     data: List[Any]
     count: int
+    on_processed_search: Any
 
 
 @router.get("/info", response_model=InfoSchema)
 async def info(search_str: str = Query(..., alias="q")):
-    # (search_str, clear_search_str) = spell_checker.predict_single_correction(
     search_str, clear_search_str = global_objs.spell_checker.predict_single_correction(
         search_str,
         use_preprocessing=True,
         use_keyboard_inverter=False,
         use_correction=True,
     )
-
-    # search_str, clear_search_str = global_objs[
-    #     "spell_checker"
-    # ].predict_single_correction(
-    #     search_str,
-    #     use_preprocessing=True,
-    #     use_keyboard_inverter=False,
-    #     use_correction=True,
-    # )
 
     on_processed_search = tuple(
         set(
@@ -46,15 +37,6 @@ async def info(search_str: str = Query(..., alias="q")):
             ]
         )
     )
-
-    # on_processed_search = tuple(
-    #     set(
-    #         [
-    #             *global_objs["nearest_queries"].get_knn_query(clear_search_str),
-    #             clear_search_str,
-    #         ]
-    #     )
-    # )
 
     a = query_es(search_str, 1, 5)
     count, data = await a
