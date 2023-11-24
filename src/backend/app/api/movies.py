@@ -4,12 +4,11 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
 from app.deps.elastic import query_es
-from utils.nearest_queries import path
 
-# from utils.spelling_checker.sym_spell_servicer import SymSpellRouterServicer
+# from app.lifespan import spell_checker, nearest_queries
+from app.lifespan import global_objs
 
 
-# spell_checker = SymSpellRouterServicer()
 router = APIRouter(prefix="/items")
 
 
@@ -22,16 +21,50 @@ class InfoSchema(BaseModel):
 
 @router.get("/info", response_model=InfoSchema)
 async def info(search_str: str = Query(..., alias="q")):
-    # b = spell_checker.predict_single_correction(
+    # (search_str, clear_search_str) = spell_checker.predict_single_correction(
+    search_str, clear_search_str = global_objs.spell_checker.predict_single_correction(
+        search_str,
+        use_preprocessing=True,
+        use_keyboard_inverter=False,
+        use_correction=True,
+    )
+
+    # search_str, clear_search_str = global_objs[
+    #     "spell_checker"
+    # ].predict_single_correction(
     #     search_str,
     #     use_preprocessing=True,
     #     use_keyboard_inverter=False,
     #     use_correction=True,
     # )
 
+    on_processed_search = tuple(
+        set(
+            [
+                *global_objs.nearest_queries.get_knn_query(clear_search_str),
+                clear_search_str,
+            ]
+        )
+    )
+
+    # on_processed_search = tuple(
+    #     set(
+    #         [
+    #             *global_objs["nearest_queries"].get_knn_query(clear_search_str),
+    #             clear_search_str,
+    #         ]
+    #     )
+    # )
+
     a = query_es(search_str, 1, 5)
     count, data = await a
-    return {"status": "ok", "query": search_str, "data": data, "count": count}
+    return {
+        "status": "ok",
+        "query": search_str,
+        "data": data,
+        "count": count,
+        "on_processed_search": on_processed_search,
+    }
 
 
 # @router.get("", response_model=List[ItemSchema])

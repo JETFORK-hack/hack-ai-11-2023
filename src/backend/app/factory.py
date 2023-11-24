@@ -7,7 +7,7 @@ from starlette.responses import FileResponse
 
 from app.api import api_router
 from app.core.config import settings
-from app.deps.elastic import lifespan
+from app.lifespan import lifespan
 
 
 def create_app():
