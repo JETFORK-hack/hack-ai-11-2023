@@ -47,8 +47,7 @@ async def info(search_str: str = Query(..., alias="q")):
             ]
         )
     )
-    # ориентироваться на search_str, осталосье искать с меньшим приоритетом. Посмотреть, как сделть or для всех этих условий
-    # condidats = query_es(search_str, 1, 150)
+
     condidats = query_es_get_best(search_str, page=1, page_size=150)
     count, data = await condidats
     return {

@@ -55,9 +55,9 @@ def setup_cors_middleware(app):
             allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
             allow_credentials=True,
             allow_methods=["*"],
-            allow_headers=["*"],
-            # expose_headers=["Content-Range", "Range"],
-            # allow_headers=["Authorization", "Range", "Content-Range"],
+            # allow_headers=["*"],
+            expose_headers=["Content-Range", "Range", "X-Process-Time"],
+            allow_headers=["Authorization", "Range", "Content-Range", "X-Process-Time"],
         )
 
 
