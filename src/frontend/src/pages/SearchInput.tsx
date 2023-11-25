@@ -92,11 +92,10 @@ export const SearchInput = (): JSX.Element => {
             .then((response) => {
                 setRequestTime(parseFloat(response?.headers?.['x-process-time'] || 0));
                 setSearchResult(response.data);
-
             })
 
             .catch((error) => {
-                message.error('Загрузка не удалась.', error);
+                message.error('Загрузка не удалась.', 5);
                 console.log(error);
             })
             .finally(() => {

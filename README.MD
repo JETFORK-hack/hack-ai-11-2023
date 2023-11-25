@@ -21,6 +21,7 @@ git lfs insatll
 git lfs pull
 
 # for large files. Download Resource folder!
+# scp -r -C -B ./resources/* hackai:/root/hack/resources/
 chmod u+x ./resources.sh && . ./resources.sh
 
 docker-compose up -d
