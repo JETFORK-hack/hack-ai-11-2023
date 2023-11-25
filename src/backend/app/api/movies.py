@@ -1,13 +1,13 @@
-from typing import Any, List
+from typing import List
 
 from fastapi import APIRouter, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter
 
-from app.deps.elastic import query_es, query_es_get_best
+from app.deps.elastic import query_es_get_best
 
 # from app.lifespan import spell_checker, nearest_queries
 from app.lifespan import global_objs
-from utils.top import get_default_top
+from utils.top_model.backfill import get_default_top
 
 
 router = APIRouter(prefix="/items")
@@ -26,8 +26,17 @@ class InfoSchema(BaseModel):
     query: str
     data: List[VideoDetailOut] = []
     count: int
-    on_processed_search: Any
     backfill: List[VideoDetailOut] = []
+
+
+class VideoRankValidator(BaseModel):
+    id: str
+    source_channel_title: str
+    processed_video_title: str
+    processed_channel_title: str
+
+
+rvm = TypeAdapter(List[VideoRankValidator])
 
 
 @router.get("/info", response_model=InfoSchema)
@@ -50,14 +59,37 @@ async def info(search_str: str = Query(..., alias="q")):
 
     condidats = query_es_get_best(search_str, page=1, page_size=150)
     count, data = await condidats
-    return {
-        "status": "ok",
-        "query": search_str,
-        "data": data,
-        "count": count,
-        "on_processed_search": on_processed_search,
-        "backfill": [] if len(data) else get_default_top(),
-    }
+
+    # try:
+    if len(data) < 5:
+        return {
+            "status": "ok",
+            "query": search_str,
+            "data": data if len(data) else [],
+            "count": count,
+            "backfill": [] if len(data) else get_default_top(),
+        }
+    
+    try:
+        top = global_objs.ranker.rerank(
+            search_str, [item.model_dump() for item in rvm.validate_python(data)], k=5
+        )
+
+        return {
+            "status": "ok",
+            "query": search_str,
+            "data": list(filter(lambda x: x.get("id") in top, data)),
+            "count": count,
+            "backfill": [] if len(data) else get_default_top(),
+        }
+    except Exception:
+        return {
+            "status": "ok",
+            "query": search_str,
+            "data": [],
+            "count": count,
+            "backfill": get_default_top(),
+        }
 
 
 # @router.get("", response_model=List[ItemSchema])

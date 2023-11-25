@@ -7,6 +7,7 @@ from elasticsearch import AsyncElasticsearch
 from utils.nearest_queries import NearestQueries
 
 from utils.spelling_checker.sym_spell_servicer import SymSpellRouterServicer
+from utils.top_model.top import RankHunter
 
 # Elastice
 index = settings.ELASTICSEARCH_INDEX
@@ -17,6 +18,7 @@ class GlobalContext(BaseModel):
     es: AsyncElasticsearch | None = None
     spell_checker: SymSpellRouterServicer | None = None
     nearest_queries: NearestQueries | None = None
+    ranker: RankHunter | None = None
 
 
 global_objs = GlobalContext()
@@ -32,6 +34,8 @@ async def lifespan(app: FastAPI):
     global_objs.spell_checker = SymSpellRouterServicer()
     logging.info("Loading NearestQueries models")
     global_objs.nearest_queries = NearestQueries()
+    logging.info("Loading RankHunter models")
+    global_objs.ranker = RankHunter()
     logging.info("SERVER STARTED")
     yield
     await global_objs.es.close()

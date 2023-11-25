@@ -84,7 +84,8 @@ def construct_where_condition(query: str, priority_factor: float = 1.0) -> dict:
             "match": {
                 "processed_video_title.ngram": {
                     "query": query,
-                    "boost": 2 * priority_factor,  # Умеренный boost для n-gram совпадений
+                    "boost": 2
+                    * priority_factor,  # Умеренный boost для n-gram совпадений
                 }
             }
         },
