@@ -1,3 +1,5 @@
+mkdir -p ./src/backend/utils/top_model/resources
+
 # SpellingChecker
 cp -n ./resources/bigrams.txt ./src/backend/utils/spelling_checker/mount_files/symspell/bigrams.txt
 
