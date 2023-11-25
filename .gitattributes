@@ -6,3 +6,4 @@
 *.pickle filter=lfs diff=lfs merge=lfs -text
 bigrams.txt filter=lfs diff=lfs merge=lfs -text
 *.txt filter=lfs diff=lfs merge=lfs -text
+src/backend/utils/spelling_checker/mount_files/symspell/bigrams.txt filter=lfs diff=lfs merge=lfs -text
