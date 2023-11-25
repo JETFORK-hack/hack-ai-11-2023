@@ -10,18 +10,18 @@ export default function Header() {
 
     const navigate = useNavigate();
 
-    const items = [
-        // {
-        //     key: '1',
-        //     label: 'Поиск',
-        //     onClick: () => navigate('/cart'),
-        // },
-        // {
-        //     key: '2',
-        //     label: 'Проверка товаров',
-        //     onClick: () => navigate('/products'),
-        // },
-    ]
+    // const items = [
+    //     // {
+    //     //     key: '1',
+    //     //     label: 'Поиск',
+    //     //     onClick: () => navigate('/cart'),
+    //     // },
+    //     // {
+    //     //     key: '2',
+    //     //     label: 'Проверка товаров',
+    //     //     onClick: () => navigate('/products'),
+    //     // },
+    // ]
 
 
     return (
@@ -35,8 +35,8 @@ export default function Header() {
                 <a href='/' rel="noreferrer" style={{ height: '100%' }}>
                     <img src={jetforkLogo} style={{ height: '100%', paddingRight: 50 }} />
                 </a>
-                <Menu theme='light' mode="horizontal" items={items}
-                    defaultSelectedKeys={['1']} />
+                {/* <Menu theme='light' mode="horizontal" items={items}
+                    defaultSelectedKeys={['1']} /> */}
             </Layout.Header>
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                 <Layout.Content style={{ padding: '0 50px', flex: 1, overflow: 'auto' }}>
