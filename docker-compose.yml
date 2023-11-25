@@ -9,6 +9,8 @@ services:
     env_file: .env
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
 
   elasticsearch:
     image: elastic/elasticsearch:8.11.1
