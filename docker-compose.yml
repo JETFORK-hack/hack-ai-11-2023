@@ -21,11 +21,14 @@ services:
       - discovery.type=single-node
 
       - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       # - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
 #    ulimits:
 #      memlock:
 #        soft: -1
 #        hard: -1
+    
     env_file:
       - .env
     ports:
