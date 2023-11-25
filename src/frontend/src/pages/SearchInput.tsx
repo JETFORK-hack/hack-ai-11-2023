@@ -128,7 +128,7 @@ export const SearchInput = (): JSX.Element => {
                         <List.Item key={item.id}>
                             <List.Item.Meta
                                 avatar={<Avatar style={{ backgroundColor: lighten(0.2, newColorFind(item.source_channel_title)) }}>{item.source_channel_title[0] + item.source_channel_title[1].toUpperCase()}</Avatar>}
-                                title={<a href="https://ant.design">{item.source_video_title}</a>}
+                                title={<a>{item.source_video_title}</a>}
                                 description={item.source_channel_title}
                             />
                             <div>
