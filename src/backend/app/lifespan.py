@@ -29,6 +29,7 @@ async def lifespan(app: FastAPI):
     logging.info(f"Loading ElasticSearch connect ({settings.ELASTICSEARCH_INDEX=})")
     global global_objs
     global_objs.es = AsyncElasticsearch(settings.ELASTICSEARCH_URL)
+    print(await global_objs.es.info())
     # Models
     logging.info("Loading SpellChecker sources")
     global_objs.spell_checker = SymSpellRouterServicer()
